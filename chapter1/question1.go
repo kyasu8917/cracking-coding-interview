@@ -10,12 +10,13 @@ import(
 // また、それを実装するのに新たなデータ構造が使えない場合、どのようにすればよいですか？
 
 func main() {
-	const input = "abcdefghijklss"
-	ans1(input)
+	runes := []rune("asdfghjkoiuwqqjakkds")
+
+	ans2(runes)
 }
 
-// 単純なループ処理
-// N*1/2N => O(N^2)
+// 全探索
+// O(N^2)
 func ans1(input string) {
 	var result = false
 
@@ -30,22 +31,67 @@ func ans1(input string) {
 	printResult(result)
 }
 
-// 二分探索を使用？
-func ans2(input string) {
 
+// バブルソート*二分探索
+// O(N^2) + O(logN) = O(N^2 + logN)
+func ans2(runes []rune) {
+	runes = bubbleSort(runes)
+
+	result := false
+	for _, r := range runes {
+		_, err := binarySearch(r, runes, 0, len(runes))
+		if(err == nil) {
+			result = true
+		}
+	}
+
+	printResult(result)
 }
 
-// ハッシュテーブルを使用？
-func ans3(input string) {
+// // クイックソート*二分探索
+// // O(N logN) * O(logN) = O(N logN)
+// func ans3(runes []rune) {
 
+// }
+
+// ハッシュテーブルを使用
+// O(N)　早い。
+func ans4(runes []rune) {
+	result := false
+	hashmap := map[rune]int{}
+	for _, r := range(runes) {
+		hashmap[r] ++
+		if(hashmap[r] > 1) {
+			result = true
+		}
+	}
+	
+	printResult(result)
 }
 
-// クイックソート
-func quickSort(input string) string {	
+// // クイックソート
+// func quickSort(input []rune) []rune] {
+	
+// }
+
+// バブルソート
+// O(N^2)
+func bubbleSort(input []rune) []rune {
+	for i := 0; i < len(input); i++ {
+		for j := 0; j < len(input); j++ {
+			if(input[i] < input[j]) {
+				temp := input[j]
+				input[j] = input[i]
+				input[i] = temp
+			}
+		}
+	}
+	fmt.Print(string(input))
+	return input
 }
 
 // 二分探索
-func binarySearch(c byte, sorted string, imin int, imax int)(int, error){
+func binarySearch(c rune, sorted []rune, imin int, imax int)(int, error){
 	if(imin > imax) {
 		return 0, errors.New("Not Found!")
 	}
