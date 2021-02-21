@@ -11,8 +11,18 @@ import (
 // 追加のデータ構造を用いることができるか　など。
 
 func main() {
-	input := "qwertyuiahjk"
-	ans(input)
+	input := "abcdefghijklmnopqrstu"
+	ans2(input)
+}
+
+// rune -> Int32のエイリアス
+// 'a' -> 99
+// 'z' -> 112
+// 'z' - 'a' = 25
+func runeTest() {
+	runes := []rune{'a','b','c','z'}
+	fmt.Print(runes)
+	fmt.Print(runes[3] - runes[0])
 }
 
 // O(N)
@@ -39,7 +49,27 @@ func ans(input string) {
 
 // ビットベクトルを用いることで消費メモリを削減する
 func ans2(input string) {
+	// // 文字を小文字26種類と仮定する時、Int32型のビット演算でメモリ効率化ができる
 
+	var result = false
+	runes := []rune(input)
+	var checker = 0
+	for _, r := range(runes) {
+		charAt := r - 'a'
+
+		// << -> 左シフト. 左辺の数字を右辺ビット左へシフトする
+		// ex) 00000010 (3) << 3 => 00010000 になる
+		// この時、「文字コードでn番目の文字」をビットの1で表現している
+		// そして、checkerと論理和をとって、
+		// 1を超える　=　同じビット番目が1-1になっている = 重複していると判断する 
+		if(checker & (1 << charAt) > 0) {
+			result = true
+			break
+		}
+		checker |= (1 << charAt)
+	}
+
+	printResult(result)
 }
 
 func printResult(result bool) {
